@@ -1,5 +1,4 @@
 import json
-import re
 import csv
 
 
@@ -9,10 +8,13 @@ with open("C:\\Users\\Sarop\\OneDrive\\Escritorio\\Tecnicatura en programacion U
 # 1)
 lista_jugadores = data["jugadores"]
 
+#Muestra la lista de jugadores con sus posiciones
+
 def mostrar_jugador(lista: list):
     
     for jugador in lista:
         print("{0} - {1}".format(jugador["nombre"], jugador["posicion"]))
+        #Use un for para que recorra el diccionario y el format para completar lo pedido
 
 #----------------------------------------------------------------------------------------------
 
@@ -22,12 +24,16 @@ def indice_jugador_estadisticas(lista:list):
     indice = 0
 
     for jugador in lista:
-        indice += 1
+        indice += 1 #genero los indices con los cuales se elegira la opcion
         print(indice, "{0}".format(jugador["nombre"]))
+
     
-    opcion = int(input("ingrese el indice del jugador del cual desee ver sus caracteristicas: "))
+    opcion = input("ingrese el indice (numero a la izquierda) del jugador del cual desee ver sus caracteristicas: ")
+    while not opcion.isdigit(): #valido los indices del punto de arriba para que solo ingrese numeros
+        opcion = input("reingrese solo el indice del jugador del cual desea ver sus caracteristicas: ")
+    opcion = int(opcion)
     
-    if opcion <= len(lista):
+    if opcion <= len(lista): #con la opcion indicada pido que imprima lo solicitado por consola
         jugador_seleccionado = lista[opcion - 1]
         print("{0} {1} {2}".format(jugador_seleccionado["nombre"], jugador_seleccionado["posicion"], jugador_seleccionado["estadisticas"]))
     
@@ -43,25 +49,32 @@ def estadisticas_jugador_in_csv(lista: list):
     indice = 0
 
     for jugador in lista:
-        indice += 1
+        indice += 1 #vuelvo a generar los indices como en la funcion anterior
         print(indice, "{0}".format(jugador["nombre"]))
     
     opcion = int(input("ingrese el indice del jugador del cual desee ver sus caracteristicas: "))
 
+    opcion = input("ingrese el indice (numero a la izquierda) del jugador del cual desee ver sus caracteristicas: ")
+    while not opcion.isdigit(): #vuelvo a validar los indices del punto de arriba para que solo ingrese numeros
+        opcion = input("reingrese solo el indice del jugador del cual desea ver sus caracteristicas: ")
+    opcion = int(opcion)
+
     if opcion <= len(lista):
-        jugador_seleccionado = lista[opcion - 1]
+        #resto en 1 el numero ingresado para indicar el jugador correcto en la posicion indicada
+        jugador_seleccionado = lista[opcion - 1] 
         nombre_jugador = jugador_seleccionado["nombre"]
         posicion_jugador = jugador_seleccionado["posicion"]
         estadisticas_jugador = jugador_seleccionado["estadisticas"]
+        #pongo variables asignandoles los datos solicitados
     
-        with open("lista_jugadores.csv", "w") as file:
+        with open("lista_jugadores.csv", "w") as file: #creo el archivo csv con los datos solicitados
             archivo = csv.writer(file)
             archivo.writerow(["nombre", " posicion", " estadisticas"])
             archivo.writerow([nombre_jugador, posicion_jugador, estadisticas_jugador])
             
 
         print("las estadisticas del jugador seleccionado se guardaron en lista_jugadores.csv")
-
+        #esto se imprime por consola si fue todo correcto
     else:
 
         print("opcion incorrecta")
@@ -75,13 +88,16 @@ def indice_jugador_logros(lista:list):
     indice = 0
 
     for jugador in lista:
-        indice += 1
+        indice += 1 #indico los indices en cada jugador
         print(indice, "{0}".format(jugador["nombre"]))
     
     opcion = int(input("ingrese el indice del jugador del cual desee ver sus logros: "))
+    while not opcion.isdigit(): #valido los indices del punto de arriba para que solo ingrese numeros
+        opcion = input("reingrese solo el indice del jugador del cual desea ver sus caracteristicas: ")
+    opcion = int(opcion)
     
     if opcion <= len(lista):
-        jugador_seleccionado = lista[opcion - 1]
+        jugador_seleccionado = lista[opcion - 1] #resto en 1 para dar con la posicion correcta del jugador ingresado
         print("{0} {1}".format(jugador_seleccionado["nombre"], jugador_seleccionado["logros"]))
     else:
         print("opcion incorrecta")
@@ -93,23 +109,24 @@ def indice_jugador_logros(lista:list):
 
 def promedio_puntos_partido(lista:list):
 
-    promedios_puntos = {}
-    for jugador in lista:
+    promedios_puntos = {}  
+    for jugador in lista: 
         promedio_puntos = jugador["estadisticas"]["promedio_puntos_por_partido"]
         promedios_puntos[jugador["nombre"]] = promedio_puntos
-
+    #creo un diccionario vacio y uso un for para asignar claves y valor sobre el nombre y el promedio de puntos
     
-    claves = list(promedios_puntos.keys())
+    claves = list(promedios_puntos.keys()) #creo una lista con las claves asignadas en el for
 
-    cantidad_claves = len(claves)
-    for i in range(cantidad_claves-1):
+    #obtengo longitud y ordeno las claves utilizando ordenamiento burbuja
+    cantidad_claves = len(claves) 
+    for i in range(cantidad_claves-1): 
         for j in range(0, cantidad_claves-i-1):
             if promedios_puntos[claves[j]] > promedios_puntos[claves[j+1]]:
-                claves[j], claves[j+1] = claves[j+1], claves[j]
+                claves[j], claves[j+1] = claves[j+1], claves[j]     
 
     
     diccionario_ordenado = {}
-    for clave in claves:
+    for clave in claves:# sobre el diccinario vacio, itero sobre cada clave y se le asigna el valor correspondiente
         diccionario_ordenado[clave] = promedios_puntos[clave]
     
     return print(diccionario_ordenado)
@@ -124,18 +141,20 @@ def jugador_en_salon_fama(lista:list):
     indice = 0
 
     for jugador in lista:
-        indice += 1
+        indice += 1 
         print(indice, "{0}".format(jugador["nombre"]))
-    
+    #imprimo los indices y los nombres
     player = input("ingrese el nombre del jugador para chequear si esta dentro del salon de la fama o no (si no obtiene respuesta, no se encuentra dentro del salon de la fama): ")
+    while not isinstance(player, str): #valido los indices del punto de arriba para que solo ingrese numeros
+        player = input("reingrese solo el el nombre completo del jugador para ver si se encuentra o no del salon de la fama del baloncesto: ")
     player = player.title()
-
+    #valido para que solo se ingresen datos str y el title() para que cada primera letra de cada palabra se escriba en mayuscula
     for jugador in lista:
         if jugador["nombre"] == player:
             for logro in jugador["logros"]:
                 if logro == "Miembro del Salon de la Fama del Baloncesto":
                     print("el jugador ingresado es miembro del salon de la fama")
-                                    
+                    #itero sobre la lista y si tiene escrito en logros, el logro deseado, se imprime el mensaje que es miembro               
 
 #------------------------------------------------------------------------------------------------
 
@@ -143,14 +162,14 @@ def jugador_en_salon_fama(lista:list):
 
 def rebotes_totales(lista:list):
 
-    jugador_mayor_rebotes = ""
+    
     mayor_cantidad_rebotes = 0
-
+    #inicializo la variable e itero sobre la lista
     for jugador in lista:
         if jugador["estadisticas"]["rebotes_totales"] > mayor_cantidad_rebotes:
             jugador_mayor_rebotes = jugador["nombre"]
             mayor_cantidad_rebotes = jugador["estadisticas"]["rebotes_totales"]
-
+            #una vez encontrado el jugador le asigno una variable para el nombre y otro para la cantidad y los imprimo por consola usando print y format
     return print("el jugador con mayor rebotes es {0} con {1} rebotes".format(jugador_mayor_rebotes, mayor_cantidad_rebotes))
 
 
@@ -160,7 +179,7 @@ def rebotes_totales(lista:list):
 
 def mayor_tiros_campo(lista:list):
 
-    jugador_mayor_tiros_campo = ""
+    #mismo sistema que el punto 7
     mayor_cantidad_tiros_campo = 0
 
     for jugador in lista:
@@ -176,7 +195,7 @@ def mayor_tiros_campo(lista:list):
 
 def jugador_mayor_asistencias(lista:list):
 
-    jugador_mayor_asistencias = ""
+    #mismo sistema que el punto 7 y 8
     mayor_cantidad_asistencias = 0
 
     for jugador in lista:
@@ -194,7 +213,7 @@ def jugador_mayor_asistencias(lista:list):
 def jugador_mas_puntos_partido(lista:list):
 
     valor_ingresado = int(input("ingrese un valor: "))
-
+    #ingreso un valor, lo normalizo a int e itero sobre la lista para imprimir los nombres mayor al valor ingresado
     for jugador in lista:
         if jugador["estadisticas"]["promedio_puntos_por_partido"] > valor_ingresado:
             print(jugador["nombre"])
@@ -205,6 +224,7 @@ def jugador_mas_puntos_partido(lista:list):
 
 def jugador_mas_rebotes_partido(lista:list):
 
+    #mismo sistema usado que en la funcion 10
     valor_ingresado = int(input("ingrese un valor: "))
 
     for jugador in lista:
@@ -217,6 +237,7 @@ def jugador_mas_rebotes_partido(lista:list):
 
 def jugador_mas_asistencias_partido(lista:list):
 
+    #mismo sistema usado en funciones 10 y 11
     valor_ingresado = int(input("ingrese un valor: "))
 
     for jugador in lista:
@@ -230,7 +251,7 @@ def jugador_mas_asistencias_partido(lista:list):
 
 def jugador_mayor_robos_totales(lista:list):
 
-    jugador_mayor_robos_totales = ""
+    #mismo sistema usado en funciones 7 ,8 y 9
     mayor_cantidad_robos = 0
 
     for jugador in lista:
@@ -246,7 +267,7 @@ def jugador_mayor_robos_totales(lista:list):
 
 def jugador_mayor_bloqueos_totales(lista:list):
 
-    jugador_mayor_bloqueos_totales = ""
+    #mismo sistema usado en funcion 13
     mayor_cantidad_bloqueos = 0
 
     for jugador in lista:
@@ -263,6 +284,7 @@ def jugador_mayor_bloqueos_totales(lista:list):
 
 def jugador_mayor_tiros_libres(lista:list):
 
+    #mismo sistema usado en funcion 12
     valor_ingresado = int(input("ingrese un valor: "))
 
     for jugador in lista:
@@ -277,15 +299,15 @@ def jugador_mayor_tiros_libres(lista:list):
 def promedio_puntos_partido_sin_puntaje_mas_bajo(lista:list):
 
     promedios_puntos = {}
-    for jugador in lista:
+    for jugador in lista: #itero sobre la lista, asigno claves y valores
         promedio_puntos = jugador["estadisticas"]["promedio_puntos_por_partido"]
         promedios_puntos[jugador["nombre"]] = promedio_puntos
 
-    # Obtención del jugador con el menor puntaje de puntos
+    # Obtengo el jugador con el menor puntaje 
     jugador_menor_puntos = min(promedios_puntos, key=promedios_puntos.get)
     menor_puntos = promedios_puntos[jugador_menor_puntos]
 
-    # Creación del nuevo diccionario sin el jugador con el menor puntaje de puntos
+    # Creo el nuevo diccionario sin el jugador con el menor puntaje
     diccionario_ordenado = {}
     for jugador, promedio_puntos in promedios_puntos.items():
         if promedio_puntos > menor_puntos:
@@ -301,7 +323,7 @@ def promedio_puntos_partido_sin_puntaje_mas_bajo(lista:list):
 def jugador_mayor_logros(lista:list):
 
     max_logros = 0
-
+    #itero sobre la lista y asigno 2 variables, una para el nombre del jugadory otra para la mayor cantidad de logros (usando len para saber la cantidad)
     for jugador in lista:
         cantidad_logros = (len(jugador["logros"]))
         if cantidad_logros > max_logros:
@@ -330,7 +352,6 @@ def jugador_mayor_tiros_triples(lista:list):
 
 def jugador_mayor_temporadas(lista:list):
     
-    jugador_mayor_temporadas = ""
     mayor_cantidad_temporadas = 0
 
     for jugador in lista:
@@ -350,7 +371,7 @@ def jugadores_mayores_tiros_de_campo(lista:list):
 
     for jugador in lista:
         print("{0}: {1}".format(jugador["nombre"], jugador["posicion"]))
-    
+    #imprimo la lista de jugadores con sus posiciones y luego las compara con el valor ingresado, para ver si cumple con el if, imprima los nombres correspondientes
     valor_ingresado = int(input("ingrese un valor: "))
     
     if valor_ingresado > jugador["estadisticas"]["promedio_asistencias_por_partido"]:
