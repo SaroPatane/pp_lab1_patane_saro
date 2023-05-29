@@ -378,6 +378,53 @@ def jugadores_mayores_tiros_de_campo(lista:list):
             print(jugador["nombre"])
 
   
+#------------------------------------------------------------------------------------------------------- 
+
+def bonus(lista:list):
+
+    #creo 4 diccionarios vacios
+    puntos = {}
+    rebotes = {}
+    asistencias = {}
+    robos = {}
+    
+    #se les asigna clave y valor
+    for jugador in lista:
+        nombre = jugador["nombre"]
+        puntos[nombre] = jugador["estadisticas"]["puntos_totales"]
+        rebotes[nombre] = jugador["estadisticas"]["rebotes_totales"]
+        asistencias[nombre] = jugador["estadisticas"]["asistencias_totales"]
+        robos[nombre] = jugador["estadisticas"]["robos_totales"]
+    
+    #utilizo sorted para ordenar los datos de los diccionarios, uso key para iterar sobre los valores y reverse para darle un orden descendente
+    ranking_puntos = sorted(puntos, key=puntos.get, reverse=True)
+    ranking_rebotes = sorted(rebotes, key=rebotes.get, reverse=True)
+    ranking_asistencias = sorted(asistencias, key=asistencias.get, reverse=True)
+    ranking_robos = sorted(robos, key=robos.get, reverse=True)
+
+    posiciones = {}
+    for i, jugador in enumerate(ranking_puntos): #uso enumerate para iterar sobre el indice y el elemento
+        posiciones[jugador] = [i+1, ranking_rebotes.index(jugador)+1, ranking_asistencias.index(jugador)+1, ranking_robos.index(jugador)+1]
+    #Se asigna a cada jugador en posiciones una lista que contiene su posicion en cada ranking. Se utiliza el indice i para calcular la posicion en el ranking de puntos, y las funciones index()  para obtener la posición en los rankings de rebotes, asistencias y robos según el jugador.
+    
+    ruta_archivo_csv = "resultados.csv"
+    #defino la ruta del csv y creo una lista de encabezados
+    encabezados = ["Jugador", "Puntos", "Rebotes", "Asistencias", "Robos"]
+    
+    datos_csv = []
+
+    for jugador in posiciones:
+        fila = [jugador] + posiciones[jugador]
+        datos_csv.append(fila)
+        #ingreso los datos a la lista csv
+    with open(ruta_archivo_csv, "w", newline="") as archivo_csv:
+        escritor_csv = csv.writer(archivo_csv)
+        escritor_csv.writerow(encabezados)
+        escritor_csv.writerows(datos_csv)
+    #abro el archivo csv en modo escritura y le ingreso los datos de los encabezados y los datos asignados a cada uno
+    
+
+
 
 
 while True:
@@ -403,6 +450,7 @@ while True:
     print("18. Permite ingresar un valor y mostrar los jugadores que hayan tenido un porcentaje de tiros triples superior a ese valor")
     print("19. Muestre el jugador con la mayor cantidad de temporadas jugadas")
     print("20. Permite ingresar un valor para saber que jugadores han hayan tenido un porcentaje de tiros de campo superior a ese valor")
+    print("21. Bonus: ordena e importa a un archivo csv los puntos, rebotes, asistencias y robos de los jugadores")
     print("0. Salir del programa")
     opcion = input("\nIngrese la opción deseada: ")
 
@@ -489,12 +537,15 @@ while True:
     # Opcion 20: Permite ingresar un valor para saber que jugadores han hayan tenido un porcentaje de tiros de campo superior a ese valor
     elif opcion == "20":
         jugadores_mayores_tiros_de_campo(lista_jugadores)
+    
+    
+    elif opcion == "21":
+        bonus(lista_jugadores)
 
 
     # Opcion 0: Salir
     elif opcion == "0":
         break
-
 
     else:
         print("Opción inválida. Intente de nuevo.")
