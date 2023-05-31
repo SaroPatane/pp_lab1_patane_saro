@@ -1,5 +1,6 @@
 import json
 import csv
+import re
 
 
 with open("C:\\Users\\Sarop\\OneDrive\\Escritorio\\Tecnicatura en programacion UTN\\Programacion I\\primer_parcial\\dt.json") as file:
@@ -170,7 +171,7 @@ def rebotes_totales(lista:list):
             jugador_mayor_rebotes = jugador["nombre"]
             mayor_cantidad_rebotes = jugador["estadisticas"]["rebotes_totales"]
             #una vez encontrado el jugador le asigno una variable para el nombre y otro para la cantidad y los imprimo por consola usando print y format
-    return print("el jugador con mayor rebotes es {0} con {1} rebotes".format(jugador_mayor_rebotes, mayor_cantidad_rebotes))
+    return "el jugador con mayor rebotes es {0} con {1} rebotes".format(jugador_mayor_rebotes, mayor_cantidad_rebotes)
 
 
 #---------------------------------------------------------------------------------------------------
@@ -380,6 +381,7 @@ def jugadores_mayores_tiros_de_campo(lista:list):
   
 #------------------------------------------------------------------------------------------------------- 
 
+
 def bonus(lista:list):
 
     #creo 4 diccionarios vacios
@@ -424,9 +426,225 @@ def bonus(lista:list):
     #abro el archivo csv en modo escritura y le ingreso los datos de los encabezados y los datos asignados a cada uno
     
 
+#------------------------------------------------------------------------------------------------------ 
+
+#examen parcial extra:
+
+#1)
+def jugadores_por_cada_posicion(lista:list):
+
+    contador_escolta = 0
+    contador_base = 0
+    contador_ala_pivot = 0
+    contador_alero = 0
+    contador_pivot = 0
+
+    for jugador in lista:
+        posicion = jugador["posicion"]
+        if posicion == "Escolta":
+            contador_escolta += 1
+        elif posicion == "Base":
+            contador_base += 1
+        elif posicion == "Ala-Pivot":
+            contador_ala_pivot += 1
+        elif posicion == "Alero":
+            contador_alero += 1
+        elif posicion == "Pivot":
+            contador_pivot += 1
+        
+
+    print("Contador Escolta:", contador_escolta)
+    print("Contador Base:", contador_base)
+    print("Contador Ala-Pivot:", contador_ala_pivot)
+    print("Contador Alero:", contador_alero)
+    print("Contador Pivot:", contador_pivot)
 
 
+#--------------------------------------------------------------------------------------------------------
 
+#2)
+def mostrar_jugadores_all_star(lista):
+    for jugador in lista:
+        nombre = jugador['nombre']
+        logros = jugador['logros']
+        contador_all_star = 0
+
+        for logro in logros:
+            match = re.search(r"([0-9]+) veces All-Star", logro)
+            if match:
+                contador_all_star += int(match.group(1))
+
+        return "{0}: {1} All-Star".format(nombre, contador_all_star)
+    
+
+#------------------------------------------------------------------------------------------------------- 
+
+
+#3)
+
+def mostrar_jugadores_con_mejores_estadisticas(lista:list[dict]):
+
+    
+    mejor_temporadas = {'jugador': None, 'valor': 0}
+    mejor_puntos_totales = {'jugador': None, 'valor': 0}
+    mejor_promedio_puntos_por_partido = {'jugador': None, 'valor': 0}
+    mejor_rebotes_totales = {'jugador': None, 'valor': 0}
+    mejor_promedio_rebotes_por_partido = {'jugador': None, 'valor': 0}
+    mejor_asistencias_totales = {'jugador': None, 'valor': 0}
+    mejor_promedio_asistencias_por_partido = {'jugador': None, 'valor': 0}
+    mejor_robos_totales = {'jugador': None, 'valor': 0}
+    mejor_bloqueos_totales = {'jugador': None, 'valor': 0}
+    mejor_porcentaje_tiros_de_campo = {'jugador': None, 'valor': 0}
+    mejor_porcentaje_tiros_libres = {'jugador': None, 'valor': 0}
+    mejor_porcentaje_tiros_triples = {'jugador': None, 'valor': 0}
+    
+
+    
+    for jugador in lista:
+        estadisticas = jugador['estadisticas']
+        nombre = jugador['nombre']
+    
+        if estadisticas['temporadas'] > mejor_temporadas['valor']:
+            mejor_temporadas['jugador'] = nombre
+            mejor_temporadas['valor'] = estadisticas['temporadas']
+
+        
+        elif estadisticas['puntos_totales'] > mejor_puntos_totales['valor']:
+            mejor_puntos_totales['jugador'] = nombre
+            mejor_puntos_totales['valor'] = estadisticas['puntos_totales']
+        
+        elif estadisticas['promedio_puntos_por_partido'] > mejor_promedio_puntos_por_partido['valor']:
+            mejor_promedio_puntos_por_partido['jugador'] = nombre
+            mejor_promedio_puntos_por_partido['valor'] = estadisticas['promedio_puntos_por_partido']
+        
+        elif estadisticas['rebotes_totales'] > mejor_rebotes_totales['valor']:
+            mejor_rebotes_totales['jugador'] = nombre
+            mejor_rebotes_totales['valor'] = estadisticas['rebotes_totales']
+        
+        elif estadisticas['promedio_rebotes_por_partido'] > mejor_promedio_rebotes_por_partido['valor']:
+            mejor_promedio_rebotes_por_partido['jugador'] = nombre
+            mejor_promedio_rebotes_por_partido['valor'] = estadisticas['promedio_rebotes_por_partido']
+        
+        elif estadisticas['asistencias_totales'] > mejor_asistencias_totales['valor']:
+            mejor_asistencias_totales['jugador'] = nombre
+            mejor_asistencias_totales['valor'] = estadisticas['asistencias_totales']
+        
+        elif estadisticas['promedio_asistencias_por_partido'] > mejor_promedio_asistencias_por_partido['valor']:
+            mejor_promedio_asistencias_por_partido['jugador'] = nombre
+            mejor_promedio_asistencias_por_partido['valor'] = estadisticas['promedio_asistencias_por_partido']
+        
+        elif estadisticas['robos_totales'] > mejor_robos_totales['valor']:
+            mejor_robos_totales['jugador'] = nombre
+            mejor_robos_totales['valor'] = estadisticas['robos_totales']
+        
+        elif estadisticas['bloqueos_totales'] > mejor_bloqueos_totales['valor']:
+            mejor_bloqueos_totales['jugador'] = nombre
+            mejor_bloqueos_totales['valor'] = estadisticas['bloqueos_totales']
+        
+        elif estadisticas['porcentaje_tiros_de_campo'] > mejor_porcentaje_tiros_de_campo['valor']:
+            mejor_porcentaje_tiros_de_campo['jugador'] = nombre
+            mejor_porcentaje_tiros_de_campo['valor'] = estadisticas['porcentaje_tiros_de_campo']
+        
+        elif estadisticas['porcentaje_tiros_libres'] > mejor_porcentaje_tiros_libres['valor']:
+            mejor_porcentaje_tiros_libres['jugador'] = nombre
+            mejor_porcentaje_tiros_libres['valor'] = estadisticas['porcentaje_tiros_libres']
+        
+        elif estadisticas['porcentaje_tiros_triples'] > mejor_porcentaje_tiros_triples['valor']:
+            mejor_porcentaje_tiros_triples['jugador'] = nombre
+            mejor_porcentaje_tiros_triples['valor'] = estadisticas['porcentaje_tiros_triples']
+
+    print("Mayor cantidad de temporadas:", mejor_temporadas['jugador'], "(", mejor_temporadas['valor'], ")")
+    print("Mayor cantidad de puntos totales:", mejor_puntos_totales['jugador'], "(", mejor_puntos_totales['valor'], ")") 
+    print("Mayor cantidad de promedio puntos por partido:", mejor_promedio_puntos_por_partido['jugador'], "(", mejor_promedio_puntos_por_partido['valor'], ")") 
+    print("Mayor cantidad de rebotes totales:", mejor_rebotes_totales['jugador'], "(", mejor_rebotes_totales['valor'], ")") 
+    print("Mayor cantidad de promedio rebotes por partido:", mejor_promedio_rebotes_por_partido['jugador'], "(", mejor_promedio_rebotes_por_partido['valor'], ")") 
+    print("Mayor cantidad de asistencias totales:", mejor_asistencias_totales['jugador'], "(", mejor_asistencias_totales['valor'], ")") 
+    print("Mayor cantidad de promedio asistencias por partido:", mejor_promedio_asistencias_por_partido['jugador'], "(", mejor_promedio_asistencias_por_partido['valor'], ")") 
+    print("Mayor cantidad de robos totales:", mejor_robos_totales['jugador'], "(", mejor_robos_totales['valor'], ")") 
+    print("Mayor cantidad de bloqueos totales:", mejor_bloqueos_totales['jugador'], "(", mejor_bloqueos_totales['valor'], ")") 
+    print("Mayor cantidad de porcentaje tiros de campo:", mejor_porcentaje_tiros_de_campo['jugador'], "(", mejor_porcentaje_tiros_de_campo['valor'], ")") 
+    print("Mayor cantidad de porcentaje tiros libres:", mejor_porcentaje_tiros_libres['jugador'], "(", mejor_porcentaje_tiros_libres['valor'], ")") 
+    print("Mayor cantidad de porcentaje tiros triples:", mejor_porcentaje_tiros_triples['jugador'], "(", mejor_porcentaje_tiros_triples['valor'], ")") 
+
+
+#------------------------------------------------------------------------------------------------------- 
+
+#4)
+
+def mostrar_jugador_con_mejores_estadisticas(lista: list):
+    mejor_temporadas = 0
+    mejor_puntos_totales = 0
+    mejor_promedio_puntos_por_partido = 0
+    mejor_rebotes_totales = 0
+    mejor_promedio_rebotes_por_partido = 0
+    mejor_asistencias_totales = 0
+    mejor_promedio_asistencias_por_partido = 0
+    mejor_robos_totales = 0
+    mejor_bloqueos_totales = 0
+    mejor_porcentaje_tiros_de_campo = 0
+    mejor_porcentaje_tiros_libres = 0
+    mejor_porcentaje_tiros_triples = 0
+    mejor_jugador = ""
+
+    # Recorrer la lista de jugadores
+    for jugador in data["jugadores"]:
+        estadisticas = jugador["estadisticas"]
+
+        # Comparar y actualizar las mejores estadísticas
+        if estadisticas["temporadas"] > mejor_temporadas:
+            mejor_temporadas = estadisticas["temporadas"]
+            mejor_jugador = jugador["nombre"]
+
+        if estadisticas["puntos_totales"] > mejor_puntos_totales:
+            mejor_puntos_totales = estadisticas["puntos_totales"]
+            mejor_jugador = jugador["nombre"]
+
+        if estadisticas["promedio_puntos_por_partido"] > mejor_promedio_puntos_por_partido:
+            mejor_promedio_puntos_por_partido = estadisticas["promedio_puntos_por_partido"]
+            mejor_jugador = jugador["nombre"]
+
+        if estadisticas["rebotes_totales"] > mejor_rebotes_totales:
+            mejor_rebotes_totales = estadisticas["rebotes_totales"]
+            mejor_jugador = jugador["nombre"]
+
+        if estadisticas["promedio_rebotes_por_partido"] > mejor_promedio_rebotes_por_partido:
+            mejor_promedio_rebotes_por_partido = estadisticas["promedio_rebotes_por_partido"]
+            mejor_jugador = jugador["nombre"]
+
+        if estadisticas["asistencias_totales"] > mejor_asistencias_totales:
+            mejor_asistencias_totales = estadisticas["asistencias_totales"]
+            mejor_jugador = jugador["nombre"]
+
+        if estadisticas["promedio_asistencias_por_partido"] > mejor_promedio_asistencias_por_partido:
+            mejor_promedio_asistencias_por_partido = estadisticas["promedio_asistencias_por_partido"]
+            mejor_jugador = jugador["nombre"]
+
+        if estadisticas["robos_totales"] > mejor_robos_totales:
+            mejor_robos_totales = estadisticas["robos_totales"]
+            mejor_jugador = jugador["nombre"]
+
+        if estadisticas["bloqueos_totales"] > mejor_bloqueos_totales:
+            mejor_bloqueos_totales = estadisticas["bloqueos_totales"]
+            mejor_jugador = jugador["nombre"]
+
+        if estadisticas["porcentaje_tiros_de_campo"] > mejor_porcentaje_tiros_de_campo:
+            mejor_porcentaje_tiros_de_campo = estadisticas["porcentaje_tiros_de_campo"]
+            mejor_jugador = jugador["nombre"]
+
+        if estadisticas["porcentaje_tiros_libres"] > mejor_porcentaje_tiros_libres:
+            mejor_porcentaje_tiros_libres = estadisticas["porcentaje_tiros_libres"]
+            mejor_jugador = jugador["nombre"]
+
+        if estadisticas["porcentaje_tiros_triples"] > mejor_porcentaje_tiros_triples:
+            mejor_porcentaje_tiros_triples = estadisticas["porcentaje_tiros_triples"]
+            mejor_jugador = jugador["nombre"]
+
+    
+    print("Mejor jugador:", mejor_jugador)
+
+mostrar_jugador_con_mejores_estadisticas(lista_jugadores)
+
+"""
 while True:
     
     print("\nMenú de opciones, debe apretar alguna de las siguientes opciones para continuar:")
@@ -551,5 +769,5 @@ while True:
         print("Opción inválida. Intente de nuevo.")
 
 
-
+"""
 
